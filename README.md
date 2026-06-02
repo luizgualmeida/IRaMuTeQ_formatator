@@ -47,7 +47,7 @@ shiny::runApp("app.R")
 ```
 
 4. O app abrirá automaticamente no seu navegador.
-5. O arquivo **materias_com_textos.csv** contém matérias de jornais a cobrindo o caso de financiamento de parte do filme Dark Horse (biografia de Jair Bolsonaro) pelo Banco Master. Utilize o arquivo como teste do app.
+5. O arquivo **materias_com_textos.csv** contém matérias de jornais cobrindo o caso de financiamento de parte do filme Dark Horse (biografia de Jair Bolsonaro) pelo Banco Master. Utilize o arquivo como teste do app.
 
 As colunas do banco de dados são:
  - título - Título da matéria
