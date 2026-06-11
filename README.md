@@ -6,7 +6,7 @@
 
 ## 🧠 O que é este app?
 
-O **IRaMuTeQ Formatator** lê arquivos de planilha com dados qualitativos (entrevistas, respostas abertas, depoimentos) e formata automaticamente o texto no padrão `.txt` exigido pelo IRaMuTeQ — incluindo cabeçalhos, tags de metadados, remoção de stopwords, acentos, substituições personalizadas e muito mais.
+O **IRaMuTeQ Formatator** lê arquivos de planilha com dados qualitativos (entrevistas, respostas abertas, depoimentos) e formata automaticamente o texto no padrão `.txt` exigido pelo IRaMuTeQ, incluindo cabeçalhos, tags de metadados, remoção de stopwords, acentos, substituições personalizadas e muito mais.
 
 ---
 
