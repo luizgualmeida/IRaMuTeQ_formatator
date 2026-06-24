@@ -23,6 +23,7 @@ install.packages(c(
   "shiny",
   "bs4Dash",
   "readxl",
+  "readr", 
   "dplyr",
   "janitor",
   "stringr",
@@ -39,11 +40,11 @@ install.packages(c(
 ## 🚀 Como rodar o app
 
 1. Baixe ou clone o repositório para o seu computador.
-2. Abra o arquivo `app.R` no **RStudio** (ou qualquer IDE de R).
+2. Abra o arquivo `formatator.R` no **RStudio** (ou qualquer IDE de R).
 3. Clique no botão **Run App**, ou execute o seguinte comando no console:
 
 ```r
-shiny::runApp("app.R")
+shiny::runApp("formatator.R")
 ```
 
 4. O app abrirá automaticamente no seu navegador.
@@ -261,11 +262,11 @@ install.packages(c(
 ## 🚀 How to run the app
 
 1. Download or clone the repository to your computer.
-2. Open the file `app.R` in **RStudio** (or any R IDE).
+2. Open the file `formatator_en.R` in **RStudio** (or any R IDE).
 3. Click the **Run App** button, or run the following command in the console:
 
 ```r
-shiny::runApp("app.R")
+shiny::runApp("formatator_en.R")
 ```
 
 4. The app will open in your browser automatically.

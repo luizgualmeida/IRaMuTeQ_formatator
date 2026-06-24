@@ -16,6 +16,7 @@ library(plotly)
 library(shinycssloaders)
 library(shinyWidgets)
 library(purrr)
+library(readr)
 
 # =============================================================================
 # STOPWORDS
@@ -66,9 +67,59 @@ stopwords_br <- c(
   'hj', 'amg', 'bjs', 'bjss', 'vlw', 'flw', 'blz', 'ne', 'ta', 'to'
 )
 
+
 # =============================================================================
 # FUNÇÕES AUXILIARES
 # =============================================================================
+
+
+#' Lê um CSV detectando o encoding automaticamente
+#' Tenta UTF-8 primeiro; se falhar ou produzir caracteres inválidos,
+#' usa readr::guess_encoding() para detectar e tenta novamente.
+ler_csv_auto <- function(path) {
+  
+  # Tentativa 1: UTF-8 (encoding mais comum e correto)
+  df <- tryCatch(
+    read.csv(path, stringsAsFactors = FALSE, encoding = "UTF-8",
+             fileEncoding = "UTF-8"),
+    error = function(e) NULL
+  )
+  
+  # Verifica se a leitura produziu caracteres corrompidos (sinal clássico
+  # de mismatch de encoding: sequências como "Ã£" no lugar de "ã")
+  tem_corrompido <- function(df) {
+    texto <- paste(unlist(df), collapse = " ")
+    grepl("\xc3\x83|\xc3\xa3|Ã£|Ã©|Ã­|Ã³|Ãº|Ã§", texto, fixed = FALSE)
+  }
+  
+  if (!is.null(df) && !tem_corrompido(df)) return(df)
+  
+  # Tentativa 2: detectar encoding com readr
+  enc_guess <- tryCatch({
+    guesses <- readr::guess_encoding(path)
+    if (nrow(guesses) == 0) return(NULL)
+    guesses$encoding[1]   # encoding com maior confiança
+  }, error = function(e) NULL)
+  
+  if (is.null(enc_guess)) {
+    # Fallback: latin1 cobre a maioria dos arquivos exportados pelo Excel BR
+    enc_guess <- "latin1"
+  }
+  
+  # Tentativa 3: leitura com o encoding detectado
+  df <- tryCatch(
+    read.csv(path, stringsAsFactors = FALSE, fileEncoding = enc_guess),
+    error = function(e) NULL
+  )
+  
+  if (!is.null(df)) return(df)
+  
+  # Se tudo falhar, lança erro informativo
+  stop(paste0(
+    "Could not read the CSV file. Tried UTF-8 and ", enc_guess, ". ",
+    "Please save the file as UTF-8 in Excel (Save As → CSV UTF-8) and try again."
+  ))
+}
 
 #' Remove acentos de um vetor de strings
 remover_acentos <- function(texto) {
@@ -695,8 +746,7 @@ server <- function(input, output, session) {
     
     df_subs <- tryCatch({
       if (ext == "csv") {
-        read.csv(input$dicionario_file$datapath,
-                 stringsAsFactors = FALSE, encoding = "UTF-8")
+        ler_csv_auto(input$dicionario_file$datapath)
       } else {
         readxl::read_excel(input$dicionario_file$datapath)
       }
@@ -812,7 +862,7 @@ server <- function(input, output, session) {
         ext <- tools::file_ext(input$file$name)
         
         df <- if (ext == "csv") {
-          read.csv(input$file$datapath, stringsAsFactors = FALSE, encoding = "UTF-8") %>%
+          ler_csv_auto(input$file$datapath) %>%
             clean_names()
         } else {
           read_excel(input$file$datapath) %>%
